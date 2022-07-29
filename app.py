@@ -21,9 +21,18 @@ def homepage():
 def new_game():
     """Start a new game and return JSON: {game_id, board}."""
 
+        # self.word_list = word_list
+        # self.board_size = board_size
+        # self.word_length_scores = word_length_scores
+        # self.max_word_length_score = max_word_length_score
+
+        # self.board = self.get_random_board(fill_letters)
+        # self.played_words = set()
+        # self.score = 0
+
     # get a unique string id for the board we're creating
     game_id = str(uuid4())
     game = BoggleGame()
     games[game_id] = game
 
-    return {"gameId": "need-real-id", "board": "need-real-board"}
+    return jsonify({"gameId": game_id, "board": game.board})

@@ -23,7 +23,7 @@ class BoggleAppTestCase(TestCase):
 
         with self.client as client:
             response = client.get('/')
-            
+
             html = response.get_data(as_text=True)
             self.assertEqual(response.status_code, 200)
             self.assertIn('<table', html)  # doesn't check whole tag, but just for this part of it
@@ -35,5 +35,15 @@ class BoggleAppTestCase(TestCase):
         """Test starting a new game."""
 
         with self.client as client:
-            ...
-            # write a test for this route
+            response = client.post("/api/new-game")
+            html = response.get_data(as_text=True)
+
+            parsed = response.get_json() #must parse byte string
+            breakpoint()
+            self.assertIn("gameId", html)
+            self.assertTrue(type(parsed["board"][0]) == list)
+            self.assertTrue(games)
+
+#the route returns JSON with a string game id,
+# and a list-of-lists for the board
+# the route stores the new game in the games dictionary
