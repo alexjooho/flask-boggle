@@ -26,8 +26,10 @@ class BoggleAppTestCase(TestCase):
             
             html = response.get_data(as_text=True)
             self.assertEqual(response.status_code, 200)
-            self.assertIn('<table class="board">', html)
+            self.assertIn('<table', html)  # doesn't check whole tag, but just for this part of it
             # test that you're getting a template
+            # don't want to put whole table class = "board" because someone might change it
+            # could even put in the comment since no one will change
 
     def test_api_new_game(self):
         """Test starting a new game."""
