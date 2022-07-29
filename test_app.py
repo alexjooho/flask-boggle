@@ -44,6 +44,3 @@ class BoggleAppTestCase(TestCase):
             self.assertTrue(type(parsed["board"][0]) == list)
             self.assertTrue(games)
 
-#the route returns JSON with a string game id,
-# and a list-of-lists for the board
-# the route stores the new game in the games dictionary

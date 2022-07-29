@@ -21,18 +21,25 @@ def homepage():
 def new_game():
     """Start a new game and return JSON: {game_id, board}."""
 
-        # self.word_list = word_list
-        # self.board_size = board_size
-        # self.word_length_scores = word_length_scores
-        # self.max_word_length_score = max_word_length_score
-
-        # self.board = self.get_random_board(fill_letters)
-        # self.played_words = set()
-        # self.score = 0
-
     # get a unique string id for the board we're creating
     game_id = str(uuid4())
     game = BoggleGame()
     games[game_id] = game
 
     return jsonify({"gameId": game_id, "board": game.board})
+
+
+@app.post("/api/score-word")
+def score_word():
+    data = request.json # turns json into dictionary format
+    word = data["word"]
+    gameId = data["gameId"]
+
+    #breakpoint only works if server is up and api called
+
+    if not games[gameId].is_word_in_word_list(word):
+        return jsonify(result = "not-word")
+    if not games[gameId].check_word_on_board(word):
+        return jsonify(result = "not-on-board")
+
+    return jsonify(result= "ok")
