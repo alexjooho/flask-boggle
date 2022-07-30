@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "this-is-secret"
 
 # The boggle games created, keyed by game id
-games = {}
+games = {}  # want to keep this out of an API database because we don't want to keep track of every game
 
 
 @app.get("/")
@@ -33,6 +33,7 @@ def new_game():
 def score_word():
     """ Accepts word and gameId, returns a JSON saying if the word is legal """ #make sure for docstrings, include accepts and returns
     data = request.json # turns json into dictionary format, don't need .get_json()
+            # needed to do .upper() for this because they might put in lower case words
     word = data["word"]
     gameId = data["gameId"]
 
@@ -40,8 +41,10 @@ def score_word():
 
     if not games[gameId].is_word_in_word_list(word):
         return jsonify(result = "not-word")
-    if not games[gameId].check_word_on_board(word):
+    elif not games[gameId].check_word_on_board(word):
         return jsonify(result = "not-on-board")
-    
-    # call score word method
-    return jsonify(result= "ok")
+    else:
+        # call score word method
+        games[gameId].play_and_score_word(word)  
+        #added this so that it would play and score the word (although it doesn't matter yet)
+        return jsonify(result= "ok")

@@ -37,6 +37,7 @@ class BoggleAppTestCase(TestCase):
         with self.client as client:
             response = client.post("/api/new-game")
             html = response.get_data(as_text=True) #change, we're trying to check for gameId in games
+            #need the .get_data to get the data part, and we need as_text=True because it is originally in byte string
 
             parsed = response.get_json() #must parse byte string into dictionary/object (can't parse text)
             self.assertIn("gameId", html)
