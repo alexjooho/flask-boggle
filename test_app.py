@@ -36,11 +36,42 @@ class BoggleAppTestCase(TestCase):
 
         with self.client as client:
             response = client.post("/api/new-game")
-            html = response.get_data(as_text=True)
+            html = response.get_data(as_text=True) #change, we're trying to check for gameId in games
 
-            parsed = response.get_json() #must parse byte string
-            breakpoint()
+            parsed = response.get_json() #must parse byte string into dictionary/object (can't parse text)
             self.assertIn("gameId", html)
             self.assertTrue(type(parsed["board"][0]) == list)
             self.assertTrue(games)
+            #new assertion, type of gameId is string
 
+    def test_score_word(self):
+        """ test scoring a word """
+
+        with self.client as client:
+            response = client.post('/api/new-game')
+            # html = response.get_data(as_text=True)
+
+            parsed = response.get_json()
+            gameId = parsed["gameId"]
+            games[gameId].board = [
+                ['C', 'A', 'T', 'A', 'A'],
+                ['A', 'A', 'A', 'A', 'A'],
+                ['A', 'A', 'A', 'A', 'A'],
+                ['A', 'A', 'A', 'A', 'A'],
+                ['A', 'A', 'A', 'A', 'A']
+                ]
+
+            score_response = client.post('/api/score-word', json = {"gameId": gameId, "word": "CAT"})  #need to do json = because it is testing an AJAX request
+            score_response2 = client.post('/api/score-word', json = {"gameId": gameId, "word": "DOG"})
+            score_response3 = client.post('/api/score-word', json = {"gameId": gameId, "word": "ABARC"})
+
+                #make better variable names
+
+            json_response = score_response.get_json()  #score_response gives us a byte string (JSON), we then turn this into dictionary
+            json_response2 = score_response2.get_json()
+            json_response3 = score_response3.get_json()
+                #maybe call response_data because it's technically not json
+
+            self.assertEqual(json_response, {"result": "ok"})
+            self.assertEqual(json_response2, {"result": "not-on-board"})
+            self.assertEqual(json_response3, {"result": "not-word"})

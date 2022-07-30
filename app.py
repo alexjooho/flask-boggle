@@ -29,9 +29,10 @@ def new_game():
     return jsonify({"gameId": game_id, "board": game.board})
 
 
-@app.post("/api/score-word")
+@app.post("/api/score-word")  # tested this with insomnia (more intuitive than console)
 def score_word():
-    data = request.json # turns json into dictionary format
+    """ Accepts word and gameId, returns a JSON saying if the word is legal """ #make sure for docstrings, include accepts and returns
+    data = request.json # turns json into dictionary format, don't need .get_json()
     word = data["word"]
     gameId = data["gameId"]
 
@@ -41,5 +42,6 @@ def score_word():
         return jsonify(result = "not-word")
     if not games[gameId].check_word_on_board(word):
         return jsonify(result = "not-on-board")
-
+    
+    # call score word method
     return jsonify(result= "ok")
